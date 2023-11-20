@@ -1,13 +1,13 @@
 @import "../../styles/variables.scss";
 
 .navbar {
-  border-bottom: 1px solid $bg-main;
+  border-bottom: 1px solid rgb(216, 216, 216);
   background-color: white;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 15px;
+  padding: 14px 15px;
   .navbarLeft {
     h4 {
       font-size: 22px;

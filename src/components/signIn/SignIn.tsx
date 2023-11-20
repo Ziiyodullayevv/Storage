@@ -49,7 +49,11 @@ const SignIn = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleTogglePassword} edge="end">
+                  <IconButton
+                    size="small"
+                    onClick={handleTogglePassword}
+                    edge="end"
+                  >
                     {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
                   </IconButton>
                 </InputAdornment>

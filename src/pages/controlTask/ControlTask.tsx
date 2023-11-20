@@ -6,6 +6,9 @@ const ControlTask = () => {
   return (
     <div className="taskControl">
       <Navbar props={task} />
+      <div className="taskPage">
+        
+      </div>
     </div>
   );
 };
