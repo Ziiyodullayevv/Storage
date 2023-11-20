@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./navbar.scss";
 import { CiLogout } from "react-icons/ci";
 
@@ -13,7 +14,9 @@ const Navbar = ({ props }: Props) => {
       </div>
       <div className="navbarRight">
         <CiLogout />
-        <h4>Logout</h4>
+        <Link className="logOut" to={"/signin"}>
+          Logout
+        </Link>
       </div>
     </div>
   );

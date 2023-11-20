@@ -22,7 +22,9 @@
     &:hover {
       cursor: pointer;
     }
-    h4 {
+    .logOut {
+      text-decoration: none;
+      color: $bg-main;
       font-weight: 300;
     }
   }

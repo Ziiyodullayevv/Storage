@@ -1,7 +1,6 @@
 import "../styles/global.scss";
 
 // global pages:
-import Navbar from "../components/Navbar/Navbar";
 import Menu from "../components/Menu/Menu";
 
 // pages:
