@@ -1,0 +1,29 @@
+@import "../../styles/variables.scss";
+
+.navbar {
+  border-bottom: 1px solid $bg-main;
+  background-color: white;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  .navbarLeft {
+    h4 {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+  }
+  .navbarRight {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    &:hover {
+      cursor: pointer;
+    }
+    h4 {
+      font-weight: 300;
+    }
+  }
+}

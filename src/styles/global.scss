@@ -1,0 +1,23 @@
+@import "./variables.scss";
+
+.main {
+  .container {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+
+    .menuContainer {
+      border-right: 1px solid $bg-main;
+      overflow: auto;
+      width: 150px;
+      background-color: $bg-dark;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    .contentContainer {
+      background-color: white;
+      width: 100%;
+    }
+  }
+}
