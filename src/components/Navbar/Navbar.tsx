@@ -7,6 +7,9 @@ type Props = {
 };
 
 const Navbar = ({ props }: Props) => {
+  const handleDeleteToken = () => {
+    localStorage.removeItem("token");
+  };
   return (
     <div className="navbar">
       <div className="navbarLeft">
@@ -14,7 +17,7 @@ const Navbar = ({ props }: Props) => {
       </div>
       <div className="navbarRight">
         <CiLogout />
-        <Link className="logOut" to={"/signin"}>
+        <Link className="logOut" onClick={handleDeleteToken} to={"/signin"}>
           Logout
         </Link>
       </div>

@@ -1,13 +1,7 @@
-import Navbar from "../../components/Navbar/Navbar";
-import "./analytic.scss";
+import React from "react";
 
 const Analytic = () => {
-  const analytic = "Analytic";
-  return (
-    <div className="analytic">
-      <Navbar props={analytic} />
-    </div>
-  );
+  return <div>Analytic</div>;
 };
 
 export default Analytic;

@@ -1,20 +1,72 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import "./signIn.scss";
-import { Link } from "react-router-dom";
 
+// react-router-dom:
+import { Link, useNavigate } from "react-router-dom";
+
+// mui-components:
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 
-import { useState } from "react";
+// react-icons:
+import { useRef, useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
 
-const SignIn = () => {
+const SignIn: React.FC = () => {
+  interface UserData {
+    username: string;
+    password: string;
+  }
+  // navigate:
+  const navigate = useNavigate();
+
+  // password-icon open-close:
   const [showPassword, setShowPassword] = useState(false);
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
+
+  // refs:
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const [userData, setUserData] = useState<UserData>({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // login:
+  const handleSubmit = () => {
+    fetch("http://127.0.0.1:8000/account/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "http://localhost:5173",
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res?.success) {
+          localStorage.setItem("token", res?.data?.tokens?.access);
+          navigate("/");
+        } else {
+          alert("Login yoki parol xato!");
+        }
+      });
+  };
+
   return (
     <div className="signIn">
       <form>
@@ -23,29 +75,29 @@ const SignIn = () => {
             Sign in to account
           </Typography>
           <TextField
-            size="small"
+            size="medium"
             sx={{ width: "100%" }}
             id="filled-basic"
-            type="email"
-            label="Login or Email"
+            type="text"
+            label="username"
+            name="username"
             variant="outlined"
+            value={userData.username}
+            onChange={handleChange}
+            inputRef={usernameRef}
           />
-          {/* <TextField
-            size="small"
-            sx={{ width: "100%" }}
-            id="filled-basic"
-            label="Password"
-            type="password"
-            variant="outlined"
-          /> */}
 
           <TextField
-            size="small"
+            size="medium"
             sx={{ width: "100%" }}
             id="filled-basic"
             label="Password"
             type={showPassword ? "text" : "password"}
             variant="outlined"
+            name="password"
+            value={userData.password}
+            onChange={handleChange}
+            inputRef={passwordRef}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -61,7 +113,16 @@ const SignIn = () => {
             }}
           />
 
-          <Button size="large" variant="contained">
+          <Button
+            onClick={handleSubmit}
+            size="large"
+            sx={{
+              padding: "12px 0",
+              boxShadow: "none",
+              backgroundColor: "#2F89E3",
+            }}
+            variant="contained"
+          >
             Sign In
           </Button>
           <div className="toSignUp">

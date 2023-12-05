@@ -1,17 +1,13 @@
 .signUp {
+  padding: 80px 10px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   form {
     border: 1px solid rgb(208, 208, 208);
     padding: 30px 20px;
     border-radius: 10px;
-    min-width: 350px;
+    width: 400px;
+
     .toSignUp {
       display: flex;
       gap: 10px;

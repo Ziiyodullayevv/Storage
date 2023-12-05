@@ -13,31 +13,31 @@ export const menu = [
   {
     id: 1,
     path: "/",
-    title: "Storage",
-    icon: BsClipboardData,
+    title: "Analytics",
+    icon: AiOutlineFund,
   },
   {
     id: 2,
     path: "/analytic",
-    title: "analytic",
-    icon: AiOutlineFund,
+    title: "Storage",
+    icon: BsClipboardData,
   },
   {
     id: 3,
     path: "/sales",
-    title: "Sales",
+    title: "Product",
     icon: BsCart2,
   },
   {
     id: 4,
-    path: "/deadline",
+    path: "/tasks",
     title: "Task",
     icon: BsClipboard2Check,
   },
   {
     id: 5,
     path: "/info",
-    title: "Client Info",
+    title: "Клиент",
     icon: BsPersonGear,
   },
   {
@@ -49,7 +49,7 @@ export const menu = [
   {
     id: 7,
     path: "/work",
-    title: "Work",
+    title: "Запасной",
     icon: BsPersonWorkspace,
   },
 ];

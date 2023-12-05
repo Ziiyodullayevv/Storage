@@ -1,0 +1,61 @@
+.add {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.183);
+  z-index: 2;
+  backdrop-filter: blur(5px);
+  .modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    transition: all 0.3s ease;
+    overflow-y: scroll;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    right: -500px;
+    color: black;
+    background-color: white;
+    width: 500px;
+    border: 1px solid rgb(194, 194, 194);
+    padding: 20px 30px;
+    height: 100vh;
+    .modalList {
+      width: 100%;
+    }
+  }
+  .show {
+    right: 0 !important;
+  }
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.activeTexteria {
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  padding: 10px;
+  border: 1px solid rgb(199, 199, 199);
+  border-radius: 5px;
+  font-size: 16px;
+  &:hover {
+    border: 1px solid black;
+  }
+  &:focus {
+    border: 1px solid transparent;
+    padding: 10px;
+    outline: 2px solid #2f89e3;
+    outline-offset: -1px;
+  }
+  &::placeholder {
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
