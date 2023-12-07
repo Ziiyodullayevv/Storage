@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RiEdit2Line } from "react-icons/ri";
 import { AiOutlineDelete } from "react-icons/ai";
 import { Modal, Input, Select } from "antd";
@@ -8,47 +8,71 @@ import Button from "@mui/material/Button";
 import Navbar from "../../components/Navbar/Navbar";
 import AntdTable from "../../components/antdTable/AntdTable";
 import Footer from "../../components/footer/Footer";
-import "./order.scss";
-import { useNavigate } from "react-router-dom";
 import { OrderContext } from "../../context/Order";
 import { AccountContext } from "../../context/Account";
 import { ProductContext } from "../../context/Product";
 import { StorageContext } from "../../context/Storage";
 import AddOrder from "../../components/addOrder/AddOrder";
+import "./order.scss";
+import { useNavigate } from "react-router-dom";
 
 const Orders = () => {
   const navigate = useNavigate();
-  const access = localStorage.getItem("access");
-  const clients = "Clients";
-  const url = import.meta.env.VITE_KEY;
   const token = localStorage.getItem("token");
+  const clients = "Заказы";
+  const url = import.meta.env.VITE_KEY;
   const [open, setOpen] = useState(false);
   const [order, setOrderList] = useContext(OrderContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingClient, setIsEditingClient] = useState<any>(null);
   const [clientList] = useContext(AccountContext);
   const [productList] = useContext(ProductContext);
-  const [storageList] = useContext(StorageContext);
+  const [, setStorageList] = useContext(StorageContext);
 
-  if (access) return navigate("/signin");
+  useEffect(() => {
+    fetch(`${url}/order/list`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setOrderList(data);
+        } else {
+          navigate("/signin");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const columns = [
     {
-      key: "1",
-      title: "ID",
-      render: (id, obj, index: number) => <span>{index + 1}</span>,
+      key: "id",
+      title: "№",
+      dataIndex: "id",
+      render: (id: any, obj: any, index: number) => <span>{index + 1}</span>,
     },
     {
-      key: "2",
-      title: "Client Name",
+      key: "client_full_name",
+      title: "Имя клиента",
       dataIndex: "client_full_name",
+      render: (text: string) => (
+        <span style={{ textTransform: "capitalize" }}>{text}</span>
+      ),
     },
-    { key: "3", title: "Device Name", dataIndex: "device_name" },
-    { key: "4", title: "Price", dataIndex: "price" },
-    { key: "5", title: "Deadline", dataIndex: "deadline" },
+    {
+      key: "device_name",
+      title: "Имя устройства",
+      dataIndex: "device_name",
+      render: (text: string) => (
+        <span style={{ textTransform: "capitalize" }}>{text}</span>
+      ),
+    },
+
+    { key: "price", title: "Цена", dataIndex: "price" },
+    { key: "deadline", title: "Крайний срок", dataIndex: "deadline" },
     {
       key: "6",
-      title: "Actions",
+      title: "Действия",
       render: (record: any) => (
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <RiEdit2Line
@@ -83,11 +107,8 @@ const Orders = () => {
       }
     };
 
-    Modal.confirm({
-      title: "Rostdan ham ushbu malumotni ochirmoqchimisiz",
-      okText: "Yes",
-      okType: "danger",
-      onOk: async () => {
+    const handleDeleteOrder = async (id: number) => {
+      try {
         await fetch(`${url}/order/delete/${id}`, {
           method: "DELETE",
           headers: {
@@ -96,8 +117,36 @@ const Orders = () => {
           },
         });
 
-        await refreshData();
-      },
+        await refreshData(); // Agar refreshData ni ishlatishni istasangiz
+        await updateStorage(); // Yangi qo'shilgan qism
+
+        // Boshqa kodlar
+      } catch (error) {
+        console.error("Xatolik sodir bo'ldi:", error);
+      }
+    };
+
+    const updateStorage = () => {
+      fetch(`${url}/storage/list_or_create/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setStorageList(data);
+        })
+        .catch((err) => console.log(err));
+    };
+
+    const onOk = async () => {
+      await handleDeleteOrder(id);
+      // Boshqa kodlar
+    };
+
+    Modal.confirm({
+      title: "Rostdan ham ushbu malumotni ochirmoqchimisiz",
+      okText: "Yes",
+      okType: "danger",
+      onOk: onOk,
     });
   };
 
@@ -142,7 +191,7 @@ const Orders = () => {
             is_notificated: true,
             client: isEditingClient?.client,
             device: isEditingClient?.device,
-            storage: [isEditingClient?.storage],
+            storage: [],
           }),
         }
       );
@@ -176,135 +225,119 @@ const Orders = () => {
     }));
   };
 
-  const handleChange3 = (value: SelectValue) => {
-    setIsEditingClient((prev: object[]) => ({
-      ...prev,
-      storage: value,
-    }));
-  };
-
   return (
-    <div className="storage">
-      <div>
-        <Navbar props={clients} />
-        <div className="storagePage">
-          <Button
-            onClick={() => setOpen(true)}
-            sx={{
-              backgroundColor: "#2F89E3",
-              boxShadow: "none",
-              padding: "10px 30px",
-              marginBottom: "15px",
-            }}
-            variant="contained"
-          >
-            New Order
-          </Button>
-          <AddOrder setOpen={setOpen} open={open} slug="Order" />
-          <AntdTable columns={columns} dataSource={order} />
-          <Modal
-            title="Edit Account"
-            open={isEditing}
-            okText={"Save"}
-            onCancel={() => resetEditing()}
-            onOk={() => {
-              resetEditing();
-              handleSubmit();
-            }}
-          >
-            <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
-              Problem Description:
-            </Typography>
-            <Input
-              style={{ marginTop: "10px", padding: "10px" }}
-              value={isEditingClient?.problem_description}
-              onChange={(e) => {
-                setIsEditingClient((pre: object[]) => ({
-                  ...pre,
-                  problem_description: e.target.value,
-                }));
-              }}
-            />
-            <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
-              Price:
-            </Typography>
-            <Input
-              style={{ marginTop: "10px", padding: "10px" }}
-              value={isEditingClient?.price}
-              onChange={(e) => {
-                setIsEditingClient((pre: object[]) => ({
-                  ...pre,
-                  price: e.target.value,
-                }));
-              }}
-            />
-            <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
-              Deadline:
-            </Typography>
-            <Input
-              style={{ marginTop: "10px", padding: "10px" }}
-              value={isEditingClient?.deadline}
-              onChange={(e) => {
-                setIsEditingClient((pre: object[]) => ({
-                  ...pre,
-                  deadline: e.target.value,
-                }));
-              }}
-            />
-            <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
-              Client:
-            </Typography>
-            <Select
-              style={{
-                width: "100%",
-                marginTop: "10px",
-                height: "45px",
-              }}
-              onChange={handleChange1}
-              defaultValue={clientList?.[0]?.full_name}
-              options={clientList?.map(({ id, full_name }) => ({
-                value: id,
-                label: full_name,
-              }))}
-            />
+    <>
+      {token ? (
+        <div className="storage">
+          <div>
+            <Navbar props={clients} />
+            <div className="storagePage">
+              <Button
+                onClick={() => setOpen(true)}
+                sx={{
+                  backgroundColor: "#2F89E3",
+                  boxShadow: "none",
+                  padding: "10px 30px",
+                  marginBottom: "15px",
+                }}
+                variant="contained"
+              >
+                Новый заказ
+              </Button>
+              <AddOrder setOpen={setOpen} open={open} slug="Order" />
+              <AntdTable columns={columns} dataSource={order} />
+              <Modal
+                title="Изменить заказ"
+                open={isEditing}
+                okText={"Save"}
+                onCancel={() => resetEditing()}
+                onOk={() => {
+                  resetEditing();
+                  handleSubmit();
+                }}
+              >
+                <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
+                  Описание проблемы:
+                </Typography>
+                <Input
+                  style={{ marginTop: "10px", padding: "10px" }}
+                  value={isEditingClient?.problem_description}
+                  onChange={(e) => {
+                    setIsEditingClient((pre: object[]) => ({
+                      ...pre,
+                      problem_description: e.target.value,
+                    }));
+                  }}
+                />
+                <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
+                  Цена:
+                </Typography>
+                <Input
+                  type="number"
+                  style={{ marginTop: "10px", padding: "10px" }}
+                  value={isEditingClient?.price}
+                  onChange={(e) => {
+                    setIsEditingClient((pre: object[]) => ({
+                      ...pre,
+                      price: e.target.value,
+                    }));
+                  }}
+                />
+                <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
+                  Крайний срок:
+                </Typography>
+                <Input
+                  style={{ marginTop: "10px", padding: "10px" }}
+                  value={isEditingClient?.deadline}
+                  onChange={(e) => {
+                    setIsEditingClient((pre: object[]) => ({
+                      ...pre,
+                      deadline: e.target.value,
+                    }));
+                  }}
+                />
+                <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
+                  Клиент:
+                </Typography>
+                <Select
+                  style={{
+                    width: "100%",
+                    marginTop: "10px",
+                    height: "45px",
+                  }}
+                  onChange={handleChange1}
+                  defaultValue={clientList?.[0]?.full_name}
+                  options={clientList?.map(({ id, full_name }: any) => ({
+                    value: id,
+                    label: full_name,
+                  }))}
+                />
 
-            <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
-              Divice:
-            </Typography>
-            <Select
-              style={{
-                width: "100%",
-                marginTop: "10px",
-                height: "45px",
-              }}
-              onChange={handleChange2}
-              defaultValue={productList?.[0]?.name}
-              options={productList?.map(({ id, name }) => ({
-                value: id,
-                label: name,
-              }))}
-            />
-            <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
-              Storage:
-            </Typography>
-            <Select
-              style={{
-                width: "100%",
-                marginTop: "10px",
-                height: "45px",
-              }}
-              onChange={handleChange3}
-              defaultValue={storageList?.[0]?.spare}
-              options={storageList?.map(({ id, spare }) => ({
-                value: id,
-                label: spare,
-              }))}
-            />
-          </Modal>
+                <Typography sx={{ mt: "10px", mb: "-5px" }} variant="body2">
+                  Дивайс:
+                </Typography>
+                <Select
+                  style={{
+                    width: "100%",
+                    marginTop: "10px",
+                    height: "45px",
+                  }}
+                  onChange={handleChange2}
+                  defaultValue={productList?.[0]?.name}
+                  options={productList?.map(({ id, name }) => ({
+                    value: id,
+                    label: name,
+                  }))}
+                />
+              </Modal>
+            </div>
+          </div>
+          <Footer />
         </div>
-      </div>
-      <Footer />
-    </div>
+      ) : (
+        <>{navigate("/signin")}</>
+      )}
+    </>
   );
 };
 

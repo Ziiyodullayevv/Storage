@@ -25,15 +25,17 @@ const Products = ({ children }: ProductContextProps) => {
     fetch(`${url}/product/device_list_or_create/`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          localStorage.removeItem("access");
-          setProductList(data);
+      .then((res) => {
+        console.error(res.status);
+        if (res.status === 401) {
+          localStorage.clear;
         } else {
-          localStorage.setItem("access", "true");
+          return res.json();
         }
       })
+      .then((data) => setProductList(data)
+        
+      )
       .catch((err) => console.log(err));
   }, []);
 

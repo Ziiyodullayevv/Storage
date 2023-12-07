@@ -24,15 +24,15 @@ const Accounts = ({ children }: AccountContextProps) => {
     fetch(`${url}/account/client/`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          localStorage.removeItem("access");
-          setAccountList(data || []);
+      .then((res) => {
+        console.error(res.status);
+        if (res.status === 401) {
+          localStorage.removeItem("token");
         } else {
-          localStorage.setItem("access", "true");
+          return res.json();
         }
       })
+      .then((data) => setAccountList(data || []))
       .catch((err) => console.log(err));
   }, []);
 

@@ -1,7 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, useRef, useContext } from "react";
 import "./addOrder.scss";
-
-// mui:
 import {
   Autocomplete,
   Button,
@@ -14,16 +13,15 @@ import {
   TextField,
   Typography,
   Chip,
+  SelectChangeEvent,
 } from "@mui/material";
-
-//react icons:
 import { AiOutlineClose } from "react-icons/ai";
-import { TasksContext } from "../../context/Tasks";
 import { AccountContext } from "../../context/Account";
 import { ProductContext } from "../../context/Product";
 import { StorageContext } from "../../context/Storage";
+import { OrderContext } from "../../context/Order";
+import { ChangeEvent } from "react";
 
-// type props:
 type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
@@ -31,14 +29,17 @@ type Props = {
 };
 
 const AddOrder = (props: Props) => {
-  const url = import.meta.env.VITE_KEY;
+  const url = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
-  const [, setTaskList] = useContext(TasksContext);
+  const [, setOrderList] = useContext(OrderContext);
   const [client] = useContext(AccountContext);
   const [device] = useContext(ProductContext);
-  const [storage] = useContext(StorageContext);
+  const [storage, setStorage] = useContext(StorageContext);
 
-  // transition effect:
+  const data = storage.filter((item: any) => !item?.is_booked);
+
+  useEffect(() => {}, []);
+
   useEffect(() => {
     const enableScroll = () => {
       document.body.style.overflow = "visible";
@@ -54,31 +55,28 @@ const AddOrder = (props: Props) => {
       enableScroll();
     }
 
-    // Component unmount bo'lganda ishga tushiriladi
     return () => {
       enableScroll();
     };
   }, [props.open]);
 
-  // refs:
   const clientRef = useRef<HTMLSelectElement>(null);
   const deviceRef = useRef<HTMLSelectElement>(null);
   const problemDescriptionRef = useRef<HTMLInputElement>(null);
   const deadlineRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
 
-  // submit-data:
   interface UserData {
     client: number;
     device: number;
-    storage: object[];
+    storage: number[];
     deadline: string;
     problem_description: string;
     price: string;
   }
 
   const [userData, setUserData] = useState<UserData>({
-    client: 0,
+    client: client && client.length > 0 ? client[0]?.id || 0 : 0,
     device: 0,
     storage: [],
     deadline: "",
@@ -86,58 +84,76 @@ const AddOrder = (props: Props) => {
     price: "",
   });
 
-  // handleChange:
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: SelectChangeEvent<number | string> | ChangeEvent<HTMLInputElement>,
+    _child: React.ReactNode
   ) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name as string]: value,
     }));
   };
 
-  const fixedOptions = [storage[0]];
-  const [value, setValue] = React.useState([...fixedOptions]);
+  const fixedOptions: { id: number; spare: string }[] = [];
+  const [value, setValue] = useState<typeof fixedOptions>(fixedOptions);
 
-  const arr = value?.map((item) => {
-    return item?.id;
-  });
+  const arr = value?.map((item) => item?.id || 0);
 
-  // handleSubmit:
   const handleSubmit = async () => {
-    const refreshData = () =>
-      fetch(`${url}/order/list/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then((tasks) => {
-          setTaskList(tasks);
-        })
-        .catch((err) => console.log(err));
     try {
-      await fetch(`${url}/order/create/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ ...userData, storage: arr }),
-      });
-
-      // Yangi ma'lumotlarni olish:
+      await createOrder();
       refreshData();
-      setUserData({
-        client: 0,
-        device: 0,
-        storage: [],
-        deadline: "",
-        problem_description: "",
-        price: "",
-      });
+      refreshOrder();
+      resetForm();
     } catch (error) {
-      console.error("Ma'lumotni o'chirishda xatolik:", error);
+      console.error("Error creating order:", error);
+      // Provide user feedback, e.g., show a notification
     }
+  };
+
+  const createOrder = async () => {
+    await fetch(`${url}/order/create/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ ...userData, storage: arr }),
+    });
+  };
+
+  const refreshData = () => {
+    fetch(`${url}/order/list/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((tasks) => {
+        setOrderList(tasks);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const refreshOrder = () => {
+    fetch(`${url}/storage/list_or_create/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((tasks) => {
+        setStorage(tasks);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const resetForm = () => {
+    setUserData({
+      client: client && client.length > 0 ? client[0]?.id || 0 : 0,
+      device: 0,
+      storage: [],
+      deadline: "",
+      problem_description: "",
+      price: "",
+    });
   };
 
   return (
@@ -206,8 +222,8 @@ const AddOrder = (props: Props) => {
                   ),
                 ]);
               }}
-              options={storage}
-              getOptionLabel={(option) => option?.spare}
+              options={data}
+              getOptionLabel={(option) => option?.spare || ""}
               renderTags={(tagValue, getTagProps) =>
                 tagValue.map((option, index) => (
                   <Chip

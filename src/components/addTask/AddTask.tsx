@@ -18,7 +18,7 @@ import {
 //react icons:
 import { AiOutlineClose } from "react-icons/ai";
 import { TasksContext } from "../../context/Tasks";
-import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 // type props:
 type Props = {
@@ -28,10 +28,24 @@ type Props = {
 };
 
 const AddTask = (props: Props) => {
-  const navigate = useNavigate();
   const url = import.meta.env.VITE_KEY;
   const token = localStorage.getItem("token");
   const [_, setTaskList] = useContext(TasksContext);
+
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "Данные успешно добавлены!",
+    });
+  };
+
+  const error = () => {
+    messageApi.open({
+      type: "error",
+      content: `Данные уже существуют или поле не заполнено`,
+    });
+  };
 
   // transition effect:
   useEffect(() => {
@@ -150,7 +164,7 @@ const AddTask = (props: Props) => {
         })
         .catch((err) => console.log(err));
     try {
-      await fetch(`${url}/task/create/`, {
+      const response = await fetch(`${url}/task/create/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -159,15 +173,22 @@ const AddTask = (props: Props) => {
         body: JSON.stringify(userData),
       });
 
-      // Yangi ma'lumotlarni olish:
-      refreshData();
-      setUserData({
-        title: "",
-        manager: 0,
-        employee: 0,
-        device: 0,
-        description: "",
-      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        error();
+        console.error("HTTP 400 xatoligi:", errorData);
+      } else {
+        success();
+        // Yangi ma'lumotlarni olish:
+        refreshData();
+        setUserData({
+          title: "",
+          manager: 0,
+          employee: 0,
+          device: 0,
+          description: "",
+        });
+      }
     } catch (error) {
       console.error("Ma'lumotni o'chirishda xatolik:", error);
     }
@@ -175,6 +196,7 @@ const AddTask = (props: Props) => {
 
   return (
     <div className={`add ${props.open ? "w-100" : null}`}>
+      {contextHolder}
       <div className={`modal ${props.open ? "show" : "close"}`}>
         <IconButton
           sx={{ position: "absolute", right: "10px", top: "10px" }}
@@ -184,13 +206,16 @@ const AddTask = (props: Props) => {
           <AiOutlineClose />
         </IconButton>
         <div className="modalList">
-          <Typography sx={{ marginBottom: "20px" }} variant="h4">
-            Create New {props.slug}
+          <Typography
+            sx={{ textTransform: "capitalize", marginBottom: "20px" }}
+            variant="h4"
+          >
+            Создать новую {props.slug}
           </Typography>
 
           <Stack sx={{ width: "100%" }} spacing={2}>
             <TextField
-              label="title"
+              label="Заголовок"
               sx={{ width: "100%" }}
               variant="outlined"
               inputRef={taskTitleRef}
@@ -201,7 +226,7 @@ const AddTask = (props: Props) => {
 
             {/* Manager list  */}
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label-1">Manger</InputLabel>
+              <InputLabel id="demo-simple-select-label-1">Ясли</InputLabel>
               <Select
                 labelId="demo-simple-select-label-1"
                 id="demo-simple-select-1"
@@ -223,11 +248,11 @@ const AddTask = (props: Props) => {
 
             {/* Employee list  */}
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label-2">Employee</InputLabel>
+              <InputLabel id="demo-simple-select-label-2">Сотрудник</InputLabel>
               <Select
                 labelId="demo-simple-select-label-2"
                 id="demo-simple-select-2"
-                label="Employee"
+                label="Сотрудник"
                 value={userData.employee}
                 inputRef={employeeRef}
                 onChange={handleChange}
@@ -245,11 +270,13 @@ const AddTask = (props: Props) => {
 
             {/* Device list  */}
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label-2">Device</InputLabel>
+              <InputLabel id="demo-simple-select-label-2">
+                Устройство
+              </InputLabel>
               <Select
                 labelId="demo-simple-select-label-2"
                 id="demo-simple-select-2"
-                label="Employee"
+                label="Устройство"
                 value={userData.device}
                 inputRef={deviceRef}
                 onChange={handleChange}
@@ -268,7 +295,7 @@ const AddTask = (props: Props) => {
               minRows={3} // Minimal qator soni
               maxRows={7} // Maksimal qator soni
               aria-label="minimum height" // Kuzatishlar uchun matn
-              placeholder="Description..." // Matn ko'rinishi
+              placeholder="Описание..." // Matn ko'rinishi
               value={userData.description}
               ref={descriptionRef}
               onChange={handleChange}
@@ -287,7 +314,7 @@ const AddTask = (props: Props) => {
               size="large"
               variant="contained"
             >
-              Submit
+              Oтправлять
             </Button>
           </Stack>
         </div>

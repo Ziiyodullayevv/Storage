@@ -24,15 +24,15 @@ const Storages = ({ children }: StorageContextProps) => {
     fetch(`${url}/storage/list_or_create/`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          localStorage.removeItem("access");
-          setStorage(data || []);
+      .then((res) => {
+        console.error(res.status);
+        if (res.status === 401) {
+          localStorage.clear;
         } else {
-          localStorage.setItem("access", "true");
+          return res.json();
         }
       })
+      .then((data) => setStorage(data || []))
       .catch((err) => console.log(err));
   }, []);
 

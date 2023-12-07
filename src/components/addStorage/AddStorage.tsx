@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import "./addProduct.scss";
+import "./addStorage.scss";
 
 // mui:
 import {
@@ -16,9 +16,9 @@ import {
 
 //react icons:
 import { AiOutlineClose } from "react-icons/ai";
-import { ProductContext } from "../../context/Product";
-import { AccountContext } from "../../context/Account";
 import { message } from "antd";
+import { SparesContext } from "../../context/Spare";
+import { StorageContext } from "../../context/Storage";
 
 // type props:
 type Props = {
@@ -27,11 +27,11 @@ type Props = {
   slug: string;
 };
 
-const AddProduct = (props: Props) => {
+const AddStorage = (props: Props) => {
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_KEY;
-  const [, setAccountList] = useContext(ProductContext);
-  const [productList] = useContext(AccountContext);
+  const [, setStorageList] = useContext(StorageContext);
+  const [spareList] = useContext(SparesContext);
 
   const [messageApi, contextHolder] = message.useMessage();
   const success = () => {
@@ -71,21 +71,18 @@ const AddProduct = (props: Props) => {
   }, [props.open]);
 
   // refs:
-  const productImeiRef = useRef<HTMLInputElement>(null);
   const productNameRef = useRef<HTMLInputElement>(null);
-  const productClientRef = +useRef<HTMLInputElement>(null)
+  const spareListRef = +useRef<HTMLSelectElement>(null);
 
   // submit-data:
   interface UserData {
-    client: number;
-    name: string;
-    imei: string;
+    spare: number;
+    is_booked: boolean;
   }
 
   const [userData, setUserData] = useState<UserData>({
-    client: 0,
-    name: "",
-    imei: "",
+    spare: 0,
+    is_booked: false,
   });
 
   // handleChange:
@@ -100,16 +97,16 @@ const AddProduct = (props: Props) => {
   // handleSubmit:
   const handleSubmit = async () => {
     const refreshData = () =>
-      fetch(`${url}/product/device_list_or_create/`, {
+      fetch(`${url}/storage/list_or_create/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())
         .then((account) => {
-          setAccountList(account);
+          setStorageList(account);
         })
         .catch((err) => console.log(err));
     try {
-      const response = await fetch(`${url}/product/device_list_or_create/`, {
+      const response = await fetch(`${url}/storage/list_or_create/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,9 +119,8 @@ const AddProduct = (props: Props) => {
       } else {
         success();
         setUserData({
-          client: 0,
-          name: "",
-          imei: "",
+          spare: 0,
+          is_booked: false,
         });
         refreshData();
       }
@@ -149,44 +145,37 @@ const AddProduct = (props: Props) => {
             sx={{ textTransform: "capitalize", marginBottom: "20px" }}
             variant="h4"
           >
-            Создать новый продукт
+            Создать новое хранилище
           </Typography>
 
           <Stack sx={{ width: "100%" }} spacing={2}>
             <TextField
-              label="Имя"
+              disabled
+              label="Забронировано"
               sx={{ width: "100%" }}
               variant="outlined"
               inputRef={productNameRef}
-              value={userData?.name}
+              value={userData?.is_booked}
               onChange={handleChange}
               name="name"
             />
 
-            <TextField
-              label="IMEI"
-              sx={{ width: "100%" }}
-              variant="outlined"
-              inputRef={productImeiRef}
-              value={userData?.imei}
-              onChange={handleChange}
-              name="imei"
-            />
-
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label-5">Клиент</InputLabel>
+              <InputLabel id="demo-simple-select-label-5">
+                Запасное имя
+              </InputLabel>
               <Select
                 labelId="demo-simple-select-label-5"
                 id="demo-simple-select-5"
-                inputRef={productClientRef}
-                value={userData.client}
-                label="Клиент"
+                inputRef={spareListRef}
+                value={userData.spare}
+                label=" Запасное имя"
                 onChange={handleChange}
-                name="client"
+                name="spare"
               >
-                {productList?.map((item: any) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item?.username}
+                {spareList?.map((item: any) => (
+                  <MenuItem key={item?.id} value={item?.id}>
+                    {item?.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -214,4 +203,4 @@ const AddProduct = (props: Props) => {
   );
 };
 
-export default AddProduct;
+export default AddStorage;

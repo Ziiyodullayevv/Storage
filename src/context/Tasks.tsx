@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
+import { __PRIVATE__ } from "styled-components";
 
 interface Task {
   // Task maydonlarini ko'rsatish kerak
@@ -23,15 +24,14 @@ const Tasks = ({ children }: TasksContextProps) => {
     fetch(`${url}/task/list/`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          localStorage.removeItem("access");
-          setTasks(data || []);
+      .then((res) => {
+        if (res.status === 401) {
+          localStorage.removeItem("token");
         } else {
-          localStorage.setItem("access", "true");
+          return res.json();
         }
       })
+      .then((data) => setTasks(data || []))
       .catch((err) => console.log(err));
   }, []);
 

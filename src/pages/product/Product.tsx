@@ -1,37 +1,52 @@
 import Navbar from "../../components/Navbar/Navbar";
 import AntdTable from "../../components/antdTable/AntdTable";
 import Button from "@mui/material/Button";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./product.scss";
 import Footer from "../../components/footer/Footer";
 import AddProduct from "../../components/addProduct/AddProduct";
 import { AiOutlineDelete } from "react-icons/ai";
 import { Modal } from "antd";
-import { useNavigate } from "react-router-dom";
 import { ProductContext } from "../../context/Product";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const access = localStorage.getItem("access");
   const url = import.meta.env.VITE_KEY;
-  const products = "Product";
+  const products = "Продукт";
   const [open, setOpen] = useState(false);
   const [productList, setProductList] = useContext(ProductContext);
 
-  if (access) return navigate("/signin");
-
+  useEffect(() => {
+    fetch(`${url}/product/device_list_or_create/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProductList(data);
+        } else {
+          navigate("/signin");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   // antd-columns:
   const columns = [
     {
       key: "1",
-      title: "ID",
+      title: "№",
       dataIndex: "id",
+      render: (id, record, index: number) => <span>{index + 1}</span>,
     },
     {
       key: "2",
-      title: "Name",
+      title: "Имя",
       dataIndex: "name",
+      render: (name: string) => (
+        <span style={{ textTransform: "capitalize" }}>{name}</span>
+      ),
     },
     {
       key: "3",
@@ -41,12 +56,12 @@ const Products = () => {
 
     {
       key: "4",
-      title: "Client",
+      title: "Клиент",
       dataIndex: "client",
     },
     {
       key: "6",
-      title: "Actions",
+      title: "Действия",
       render: (record: any) => (
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <AiOutlineDelete
@@ -78,8 +93,9 @@ const Products = () => {
     };
 
     Modal.confirm({
-      title: "Rostdan ham ushbu malumotni ochirmoqchimisiz",
-      okText: "Yes",
+      title: "Вы уверены, что хотите открыть эту информацию?",
+      okText: "хорошо",
+      cancelText: "Отмена",
       okType: "danger",
       onOk: async () => {
         await fetch(`${url}/product/device/delete/${id}/`, {
@@ -110,7 +126,7 @@ const Products = () => {
             }}
             variant="contained"
           >
-            New Product
+            Новый продукт
           </Button>
           <AddProduct setOpen={setOpen} open={open} slug="Product" />
           <AntdTable columns={columns} dataSource={productList} />

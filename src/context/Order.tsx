@@ -21,17 +21,16 @@ const Order = ({ children }: OrderContextProps) => {
     fetch(`${url}/order/list/`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-
-        if (Array.isArray(data)) {
-          localStorage.removeItem("access");
-          setOrder(data || []);
+      .then((res) => {
+        console.error(res.status);
+        if (res.status === 401) {
+          localStorage.removeItem("token");
         } else {
-          localStorage.setItem("access", "true");
+          return res.json();
         }
       })
+
+      .then((data) => setOrder(data || []))
       .catch((err) => console.log(err));
   }, []);
 

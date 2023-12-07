@@ -1,0 +1,9 @@
+.storage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  .storagePage {
+    padding: 30px 15px;
+  }
+}

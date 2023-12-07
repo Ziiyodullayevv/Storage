@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Modal, Input } from "antd";
 import Button from "@mui/material/Button";
 import { RiEdit2Line } from "react-icons/ri";
@@ -13,47 +13,71 @@ import { TasksContext } from "../../context/Tasks";
 
 const Task = () => {
   const navigate = useNavigate();
-  const tasks: string = "Tasks";
+  const tasks: string = "Задача";
   const url = import.meta.env.VITE_KEY;
   const token: string | null = localStorage.getItem("token");
-  const access = localStorage.getItem("access");
   const [open, setOpen] = useState<boolean>(false);
   const [task, setTaskList] = useContext(TasksContext);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isEditingTask, setIsEditingTask] = useState<any>(null);
 
-  if (access) return navigate("/signin");
-
+  useEffect(() => {
+    fetch(`${url}/task/list`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTaskList(data);
+        } else {
+          navigate("/signin");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   // antd-columns:
   const columns = [
     {
       key: "1",
-      title: "ID",
+      title: "№",
       dataIndex: "id",
+      render: (id, record, index: number) => <span>{index + 1}</span>,
     },
     {
       key: "2",
-      title: "Title",
+      title: "Заголовок",
       dataIndex: "title",
+      render: (title: string) => (
+        <span style={{ textTransform: "capitalize" }}>{title}</span>
+      ),
     },
     {
       key: "3",
-      title: "Manager Name",
+      title: "Имя менеджера",
       dataIndex: "manager_full_name",
+      render: (title: string) => (
+        <span style={{ textTransform: "capitalize" }}>{title}</span>
+      ),
     },
     {
       key: "4",
-      title: "Employee",
+      title: "Сотрудник",
       dataIndex: "employee_full_name",
+      render: (title: string) => (
+        <span style={{ textTransform: "capitalize" }}>{title}</span>
+      ),
     },
     {
       key: "5",
-      title: "Device",
+      title: "Устройство",
       dataIndex: "device_name",
+      render: (title: string) => (
+        <span style={{ textTransform: "capitalize" }}>{title}</span>
+      ),
     },
     {
       key: "6",
-      title: "Actions",
+      title: "Действия",
       render: (record: any) => (
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <RiEdit2Line
@@ -89,8 +113,9 @@ const Task = () => {
     };
 
     Modal.confirm({
-      title: "",
-      okText: "Yes",
+      title: "Вы уверены, что хотите открыть эту информацию?",
+      okText: "Хорошо",
+      cancelText: "Отмена",
       okType: "danger",
       onOk: async () => {
         await fetch(`${url}/task/list/${id}/`, {
@@ -178,9 +203,9 @@ const Task = () => {
             }}
             variant="contained"
           >
-            New Task
+            Новое задание
           </Button>
-          <Add setOpen={setOpen} open={open} slug="task" />
+          <Add setOpen={setOpen} open={open} slug="задача" />
           <AntdTable columns={columns} dataSource={task} />
           <Modal
             title="Edit Task"

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { RiEdit2Line } from "react-icons/ri";
 import { AiOutlineDelete } from "react-icons/ai";
 import { Modal, Input } from "antd";
@@ -10,9 +10,11 @@ import Footer from "../../components/footer/Footer";
 import "./client.scss";
 import { AccountContext } from "../../context/Account";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 
 const Storage = () => {
   const clients = "Клиент";
+  const navigate = useNavigate();
   const url = import.meta.env.VITE_KEY;
   const token = localStorage.getItem("token");
   const [open, setOpen] = useState(false);
@@ -20,11 +22,26 @@ const Storage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingClient, setIsEditingClient] = useState<any>(null);
 
+  useEffect(() => {
+    fetch(`${url}/account/client/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setAccountList(data);
+        } else {
+          navigate("/signin");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const columns = [
     {
       key: "1",
       title: "№",
-      render: (id, record, index: number) => <span>{index + 1}</span>,
+      render: (id, obj, index: number) => <span>{index + 1}</span>,
     },
     {
       key: "2",

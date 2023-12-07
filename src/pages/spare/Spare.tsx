@@ -8,8 +8,10 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { Modal } from "antd";
 import { SparesContext } from "../../context/Spare";
 import AddSpare from "../../components/addSpare/AddSpare";
+import { useNavigate } from "react-router-dom";
 
 const Spare = () => {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_KEY;
   const spare = "Запасной";
@@ -23,10 +25,9 @@ const Spare = () => {
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          localStorage.removeItem("access");
           setSpareList(data);
         } else {
-          localStorage.setItem("access", "true");
+          navigate("/signin");
         }
       })
       .catch((err) => console.log(err));
@@ -38,7 +39,7 @@ const Spare = () => {
       key: "1",
       title: "№",
       dataIndex: "id",
-      render: (id, record, index: number) => <span>{index + 1}</span>,
+      render: (index: number) => <span>{index + 1}</span>,
     },
     {
       key: "2",

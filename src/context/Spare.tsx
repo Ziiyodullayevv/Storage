@@ -24,15 +24,15 @@ const Spares = ({ children }: SparesContextProps) => {
     fetch(`${url}/product/spare_list_with_id`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          localStorage.removeItem("access");
-          setSparesList(data || []);
+      .then((res) => {
+        console.error(res.status);
+        if (res.status === 401) {
+          localStorage.clear;
         } else {
-          localStorage.setItem("access", "true");
+          return res.json();
         }
       })
+      .then((data) => setSparesList(data || []))
       .catch((err) => console.log(err));
   }, []);
 

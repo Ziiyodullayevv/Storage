@@ -20,6 +20,7 @@ const SignIn: React.FC = () => {
   }
   // navigate:
   const navigate = useNavigate();
+  const url = import.meta.env.VITE_KEY;
 
   // password-icon open-close:
   const [showPassword, setShowPassword] = useState(false);
@@ -47,11 +48,10 @@ const SignIn: React.FC = () => {
 
   // login:
   const handleSubmit = () => {
-    fetch("http://127.0.0.1:8000/account/login/", {
+    fetch(`${url}/account/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:5173",
       },
       body: JSON.stringify(userData),
     })

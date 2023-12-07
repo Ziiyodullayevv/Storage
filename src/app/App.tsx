@@ -11,7 +11,7 @@ const Sale = React.lazy(() => import("../pages/product/Product"));
 const ControlTasks = React.lazy(() => import("../pages/task/Task"));
 const ClientInfo = React.lazy(() => import("../pages/client/Client"));
 const OrderHistory = React.lazy(
-  () => import("../pages/orderHistory/OrderHistory")
+  () => import("../pages/storage/Storage")
 );
 const Work = React.lazy(() => import("../pages/spare/Spare"));
 const ControlTask = React.lazy(
