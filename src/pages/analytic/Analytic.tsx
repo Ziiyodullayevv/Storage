@@ -16,8 +16,7 @@ const Analytic = () => {
   const [monthClient, setMonthClient] = useState<any>({});
   const [order, setOrder] = useState<any>(null);
   const [orderMonth, setOrderMonth] = useState<any>({});
-  const [orderPrice, setOrderPrice] = useState<any>({});
-
+  
   useEffect(() => {
     fetch(`${url}/storage/analytics/yearly_client/`)
       .then((res) => {

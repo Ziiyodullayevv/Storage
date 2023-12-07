@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, useRef, useContext } from "react";
 import "./addOrder.scss";
 import {
@@ -13,14 +12,12 @@ import {
   TextField,
   Typography,
   Chip,
-  SelectChangeEvent,
 } from "@mui/material";
 import { AiOutlineClose } from "react-icons/ai";
 import { AccountContext } from "../../context/Account";
 import { ProductContext } from "../../context/Product";
 import { StorageContext } from "../../context/Storage";
 import { OrderContext } from "../../context/Order";
-import { ChangeEvent } from "react";
 
 type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -84,10 +81,7 @@ const AddOrder = (props: Props) => {
     price: "",
   });
 
-  const handleChange = (
-    event: SelectChangeEvent<number | string> | ChangeEvent<HTMLInputElement>,
-    _child: React.ReactNode
-  ) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
       ...prevData,
@@ -182,6 +176,7 @@ const AddOrder = (props: Props) => {
                 label="Client"
                 onChange={handleChange}
                 name="client"
+                // defaultValue={"tesni 1"}
               >
                 {client?.map((item) => (
                   <MenuItem key={item.id} value={item.id}>

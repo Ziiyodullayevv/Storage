@@ -12,15 +12,17 @@ import { AccountContext } from "../../context/Account";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
-const Storage = () => {
+const StorageList = () => {
   const clients = "Клиент";
   const navigate = useNavigate();
   const url = import.meta.env.VITE_KEY;
   const token = localStorage.getItem("token");
   const [open, setOpen] = useState(false);
+  const [kerakszData, setkerakszData] = useState({});
   const [account, setAccountList] = useContext(AccountContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingClient, setIsEditingClient] = useState<any>(null);
+  console.log(kerakszData);
 
   useEffect(() => {
     fetch(`${url}/account/client/`, {
@@ -41,7 +43,10 @@ const Storage = () => {
     {
       key: "1",
       title: "№",
-      render: (id, obj, index: number) => <span>{index + 1}</span>,
+      render: (idBac: any, test: any, index: any) => {
+        setkerakszData(test);
+        return <span className={idBac}>{index + 1}</span>;
+      },
     },
     {
       key: "2",
@@ -274,4 +279,4 @@ const Storage = () => {
   );
 };
 
-export default Storage;
+export default StorageList;

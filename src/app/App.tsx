@@ -5,18 +5,13 @@ import React from "react";
 import Menu from "../components/Menu/Menu";
 
 // pages:
-const Storage = React.lazy(() => import("../pages/analytic/Analytic"));
+const StorageList = React.lazy(() => import("../pages/analytic/Analytic"));
 const Analytic = React.lazy(() => import("../pages/order/Order"));
 const Sale = React.lazy(() => import("../pages/product/Product"));
 const ControlTasks = React.lazy(() => import("../pages/task/Task"));
 const ClientInfo = React.lazy(() => import("../pages/client/Client"));
-const OrderHistory = React.lazy(
-  () => import("../pages/storage/Storage")
-);
+const OrderHistory = React.lazy(() => import("../pages/storage/Storage"));
 const Work = React.lazy(() => import("../pages/spare/Spare"));
-const ControlTask = React.lazy(
-  () => import("../components/controlTask/ControlTask")
-);
 
 // slider-component:
 import Slider from "../components/slider/Slider";
@@ -71,7 +66,7 @@ const App = () => {
                 </React.Fragment>
               }
             >
-              <Storage />
+              <StorageList />
             </React.Suspense>
           ),
         },
@@ -114,20 +109,6 @@ const App = () => {
               }
             >
               <ControlTasks />
-            </React.Suspense>
-          ),
-        },
-        {
-          path: "/tasks/:id",
-          element: (
-            <React.Suspense
-              fallback={
-                <React.Fragment>
-                  <Slider />
-                </React.Fragment>
-              }
-            >
-              <ControlTask />
             </React.Suspense>
           ),
         },

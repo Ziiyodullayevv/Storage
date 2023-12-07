@@ -8,13 +8,15 @@ import { StorageContext } from "../../context/Storage";
 import AddStorage from "../../components/addStorage/AddStorage";
 import { useNavigate } from "react-router-dom";
 
-const Storage = () => {
+const Storages = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_KEY;
   const storage = "Хранилище";
   const [open, setOpen] = useState(false);
   const [storageList, setStorageList] = useContext(StorageContext);
+  const [kerakszData, setkerakszData] = useState({});
+  console.log(kerakszData);
 
   useEffect(() => {
     fetch(`${url}/storage/list_or_create/`, {
@@ -37,7 +39,10 @@ const Storage = () => {
       key: "1",
       title: "№",
       dataIndex: "id",
-      render: (id, record, index: number) => <span>{index + 1}</span>,
+      render: (idBac: any, test: any, index: any) => {
+        setkerakszData(test);
+        return <span className={idBac}>{index + 1}</span>;
+      },
     },
     {
       key: "2",
@@ -122,4 +127,4 @@ const Storage = () => {
   );
 };
 
-export default Storage;
+export default Storages;

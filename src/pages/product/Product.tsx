@@ -17,6 +17,8 @@ const Products = () => {
   const products = "Продукт";
   const [open, setOpen] = useState(false);
   const [productList, setProductList] = useContext(ProductContext);
+    const [kerakszData, setkerakszData] = useState({});
+    console.log(kerakszData);
 
   useEffect(() => {
     fetch(`${url}/product/device_list_or_create/`, {
@@ -38,7 +40,10 @@ const Products = () => {
       key: "1",
       title: "№",
       dataIndex: "id",
-      render: (id, record, index: number) => <span>{index + 1}</span>,
+      render: (idBac: any, test: any, index: any) => {
+        setkerakszData(test);
+        return <span className={idBac}>{index + 1}</span>;
+      },
     },
     {
       key: "2",

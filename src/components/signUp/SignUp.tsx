@@ -27,6 +27,15 @@ interface UserData {
   password2: string;
   role: number;
 }
+const  UserDataCheck = {
+  username:["string"],
+  phone_number:["string"],
+  full_name:["string"],
+  email:["string"],
+  password:["string"],
+  password2:["string"],
+  role: [0],
+}
 
 const SignUp: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -45,7 +54,7 @@ const SignUp: React.FC = () => {
   };
 
   // data:
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(UserDataCheck);
   // Password icon:
   const navigate = useNavigate();
   const [showPassword1, setShowPassword1] = useState(false);
@@ -80,7 +89,7 @@ const SignUp: React.FC = () => {
 
   // handleChange:
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event:any
   ) => {
     event.preventDefault();
     const { name, value } = event.target;
@@ -104,6 +113,8 @@ const SignUp: React.FC = () => {
       .then((res) => res.json())
       .then((res) => {
         setData(res);
+        console.log(res ,"ressssssssssssssssssss");
+        
         if (res?.success) {
           success();
           localStorage.setItem("token", res?.data?.tokens?.access);
@@ -137,7 +148,7 @@ const SignUp: React.FC = () => {
             onChange={handleChange}
             inputRef={usernameRef}
             name="username"
-            error={data?.username[0]}
+            error={data?.username[0] ? true : false}
             helperText={data?.username[0]}
           />
 
@@ -152,7 +163,7 @@ const SignUp: React.FC = () => {
             onChange={handleChange}
             inputRef={fullNameRef}
             name="full_name"
-            error={data?.full_name[0]}
+            error={data?.full_name[0] ? true : false}
             helperText={data?.full_name[0]}
           />
           <TextField
@@ -187,7 +198,7 @@ const SignUp: React.FC = () => {
             value={userData.password}
             onChange={handleChange}
             inputRef={passwordRef}
-            error={data?.password[0]}
+            error={data?.password[0] ? true : false}
             helperText={data?.password[0]}
             name="password"
             InputProps={{
@@ -215,7 +226,7 @@ const SignUp: React.FC = () => {
             onChange={handleChange}
             inputRef={password2Ref}
             name="password2"
-            error={data?.password[0]}
+            error={data?.password[0] ? true : false}
             helperText={data?.password[0]}
             InputProps={{
               endAdornment: (

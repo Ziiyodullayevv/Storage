@@ -17,6 +17,8 @@ const Spare = () => {
   const spare = "Запасной";
   const [open, setOpen] = useState(false);
   const [spareList, setSpareList] = useContext(SparesContext);
+  const [kerakszData, setkerakszData] = useState({});
+  console.log(kerakszData);
 
   useEffect(() => {
     fetch(`${url}/product/spare_list_with_id`, {
@@ -39,7 +41,10 @@ const Spare = () => {
       key: "1",
       title: "№",
       dataIndex: "id",
-      render: (index: number) => <span>{index + 1}</span>,
+      render: (idBac: any, test: any, index: any) => {
+        setkerakszData(test);
+        return <span className={idBac}>{index + 1}</span>;
+      },
     },
     {
       key: "2",

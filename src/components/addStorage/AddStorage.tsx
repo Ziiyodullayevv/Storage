@@ -72,7 +72,7 @@ const AddStorage = (props: Props) => {
 
   // refs:
   const productNameRef = useRef<HTMLInputElement>(null);
-  const spareListRef = +useRef<HTMLSelectElement>(null);
+  const spareListRef = useRef<any>(null);
 
   // submit-data:
   interface UserData {
@@ -86,7 +86,7 @@ const AddStorage = (props: Props) => {
   });
 
   // handleChange:
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
       ...prevData,

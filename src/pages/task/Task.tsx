@@ -20,6 +20,8 @@ const Task = () => {
   const [task, setTaskList] = useContext(TasksContext);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isEditingTask, setIsEditingTask] = useState<any>(null);
+  const [kerakszData, setkerakszData] = useState({});
+  console.log(kerakszData);
 
   useEffect(() => {
     fetch(`${url}/task/list`, {
@@ -36,12 +38,16 @@ const Task = () => {
       .catch((err) => console.log(err));
   }, []);
   // antd-columns:
+
   const columns = [
     {
       key: "1",
       title: "№",
       dataIndex: "id",
-      render: (id, record, index: number) => <span>{index + 1}</span>,
+      render: (idBac: any, test: any, index: any) => {
+        setkerakszData(test);
+        return <span className={idBac}>{index + 1}</span>;
+      },
     },
     {
       key: "2",

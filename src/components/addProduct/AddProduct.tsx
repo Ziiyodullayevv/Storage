@@ -73,7 +73,7 @@ const AddProduct = (props: Props) => {
   // refs:
   const productImeiRef = useRef<HTMLInputElement>(null);
   const productNameRef = useRef<HTMLInputElement>(null);
-  const productClientRef = +useRef<HTMLInputElement>(null)
+  const productClientRef = useRef<HTMLInputElement>(null);
 
   // submit-data:
   interface UserData {
@@ -132,6 +132,7 @@ const AddProduct = (props: Props) => {
       console.error("Ma'lumotni o'chirishda xatolik:", error);
     }
   };
+  console.log(productList, "test");
 
   return (
     <div className={`add ${props.open ? "w-100" : null}`}>
@@ -181,14 +182,15 @@ const AddProduct = (props: Props) => {
                 inputRef={productClientRef}
                 value={userData.client}
                 label="Клиент"
-                onChange={handleChange}
+                // onChange={handleChange}
                 name="client"
               >
-                {productList?.map((item: any) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item?.username}
-                  </MenuItem>
-                ))}
+                {productList?.map((item) => {
+                
+                  return  <MenuItem key={item.id} value={item.id}>
+                     {item?.username}
+                   </MenuItem>
+                })}
               </Select>
             </FormControl>
 

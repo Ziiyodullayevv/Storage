@@ -1,7 +1,6 @@
 import { CircularProgress } from "@mui/material";
 import "./slider.scss";
 
-import React from "react";
 
 const Slider = () => {
   return (

@@ -28,6 +28,8 @@ const Orders = () => {
   const [clientList] = useContext(AccountContext);
   const [productList] = useContext(ProductContext);
   const [, setStorageList] = useContext(StorageContext);
+  const [kerakszData, setkerakszData] = useState({});
+  console.log(kerakszData);
 
   useEffect(() => {
     fetch(`${url}/order/list`, {
@@ -49,7 +51,10 @@ const Orders = () => {
       key: "id",
       title: "№",
       dataIndex: "id",
-      render: (id: any, obj: any, index: number) => <span>{index + 1}</span>,
+      render: (idBac: any, test: any, index: any) => {
+        setkerakszData(test);
+        return <span className={idBac}>{index + 1}</span>;
+      },
     },
     {
       key: "client_full_name",
@@ -306,7 +311,6 @@ const Orders = () => {
                     height: "45px",
                   }}
                   onChange={handleChange1}
-                  defaultValue={clientList?.[0]?.full_name}
                   options={clientList?.map(({ id, full_name }: any) => ({
                     value: id,
                     label: full_name,

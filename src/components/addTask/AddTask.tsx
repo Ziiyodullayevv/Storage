@@ -27,6 +27,10 @@ type Props = {
   slug: string;
 };
 
+// type props:
+
+
+
 const AddTask = (props: Props) => {
   const url = import.meta.env.VITE_KEY;
   const token = localStorage.getItem("token");
@@ -68,48 +72,60 @@ const AddTask = (props: Props) => {
       enableScroll();
     };
   }, [props.open]);
-
+const initialeData ={
+  success: true,
+  count: 19,
+  data: [
+    {
+      id: 2,
+      full_name: "2023-12-01 04:37:31.005240+00:00",
+      username: "akobir",
+      email: "akobir@gmail.cm",
+      phone_number: "995476202",
+      role: 0
+    },]}
   // fetch-data state:
-  const [employee, setEmployee] = useState(null);
+  const [employeeData, setEmployeeData] = useState<any>(initialeData);
   const [device, setDevice] = useState([]);
+  const getAccountList = async () => {
+    try {
+      const response = await fetch(`${url}/account/list/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
+      const result = await response.json();
+      setEmployeeData(result);
+      console.log(result, "e result");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getDeviceList = async () => {
+    try {
+      const response = await fetch(`${url}/product/device_list_or_create/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      setDevice(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // fetch-data:
   useEffect(() => {
-    const getAccountList = async () => {
-      try {
-        const response = await fetch(`${url}/account/list/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const result = await response.json();
-        setEmployee(result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const getDeviceList = async () => {
-      try {
-        const response = await fetch(`${url}/product/device_list_or_create/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const result = await response.json();
-        setDevice(result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  
 
     getAccountList();
     getDeviceList();
@@ -141,9 +157,7 @@ const AddTask = (props: Props) => {
 
   // handleChange:
   const handleChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    event: any
   ) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
@@ -236,9 +250,9 @@ const AddTask = (props: Props) => {
                 onChange={handleChange}
                 name="manager"
               >
-                {employee?.data
-                  .filter((item) => item.role === 0)
-                  .map((item) => (
+                {employeeData?.data
+                  .filter((item: any) => item.role === 0)
+                  .map((item: any) => (
                     <MenuItem key={item.id} value={item.id}>
                       {item.username}
                     </MenuItem>
@@ -258,9 +272,9 @@ const AddTask = (props: Props) => {
                 onChange={handleChange}
                 name="employee"
               >
-                {employee?.data
-                  .filter((item) => item.role === 1)
-                  .map((item) => (
+                {employeeData?.data
+                  .filter((item: any) => item.role === 1)
+                  .map((item: any) => (
                     <MenuItem key={item.id} value={item.id}>
                       {item.username}
                     </MenuItem>
@@ -282,7 +296,7 @@ const AddTask = (props: Props) => {
                 onChange={handleChange}
                 name="device"
               >
-                {device.map((item) => (
+                {device.map((item: any) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.name}
                   </MenuItem>
