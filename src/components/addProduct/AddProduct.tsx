@@ -89,7 +89,7 @@ const AddProduct = (props: Props) => {
   });
 
   // handleChange:
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
       ...prevData,
@@ -182,14 +182,15 @@ const AddProduct = (props: Props) => {
                 inputRef={productClientRef}
                 value={userData.client}
                 label="Клиент"
-                // onChange={handleChange}
+                onChange={handleChange}
                 name="client"
               >
                 {productList?.map((item) => {
-                
-                  return  <MenuItem key={item.id} value={item.id}>
-                     {item?.username}
-                   </MenuItem>
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item?.username}
+                    </MenuItem>
+                  );
                 })}
               </Select>
             </FormControl>

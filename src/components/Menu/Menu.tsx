@@ -1,7 +1,7 @@
 import { menu } from "../../utils/data";
 import "./menu.scss";
 
-import logo from "../../assets/Новый проект (2).png";
+import logo from "../../assets/Brand_initial_Simple_Logo-removebg-preview.png";
 import { Link, ListItem } from "./style";
 const Menu = () => {
   return (

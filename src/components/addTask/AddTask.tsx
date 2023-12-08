@@ -29,12 +29,10 @@ type Props = {
 
 // type props:
 
-
-
 const AddTask = (props: Props) => {
   const url = import.meta.env.VITE_KEY;
   const token = localStorage.getItem("token");
-  const [_, setTaskList] = useContext(TasksContext);
+  const [, setTaskList] = useContext(TasksContext);
 
   const [messageApi, contextHolder] = message.useMessage();
   const success = () => {
@@ -72,18 +70,20 @@ const AddTask = (props: Props) => {
       enableScroll();
     };
   }, [props.open]);
-const initialeData ={
-  success: true,
-  count: 19,
-  data: [
-    {
-      id: 2,
-      full_name: "2023-12-01 04:37:31.005240+00:00",
-      username: "akobir",
-      email: "akobir@gmail.cm",
-      phone_number: "995476202",
-      role: 0
-    },]}
+  const initialeData = {
+    success: true,
+    count: 19,
+    data: [
+      {
+        id: 2,
+        full_name: "2023-12-01 04:37:31.005240+00:00",
+        username: "akobir",
+        email: "akobir@gmail.cm",
+        phone_number: "995476202",
+        role: 0,
+      },
+    ],
+  };
   // fetch-data state:
   const [employeeData, setEmployeeData] = useState<any>(initialeData);
   const [device, setDevice] = useState([]);
@@ -125,8 +125,6 @@ const initialeData ={
   };
   // fetch-data:
   useEffect(() => {
-  
-
     getAccountList();
     getDeviceList();
   }, []);
@@ -156,9 +154,7 @@ const initialeData ={
   });
 
   // handleChange:
-  const handleChange = (
-    event: any
-  ) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
       ...prevData,
@@ -246,7 +242,7 @@ const initialeData ={
                 id="demo-simple-select-1"
                 inputRef={managerRef}
                 value={userData.manager}
-                label="Manager"
+                label="Ясли"
                 onChange={handleChange}
                 name="manager"
               >

@@ -16,7 +16,8 @@ const Analytic = () => {
   const [monthClient, setMonthClient] = useState<any>({});
   const [order, setOrder] = useState<any>(null);
   const [orderMonth, setOrderMonth] = useState<any>({});
-  
+  const [price, setPrice] = useState<any>({});
+
   useEffect(() => {
     fetch(`${url}/storage/analytics/yearly_client/`)
       .then((res) => {
@@ -60,10 +61,15 @@ const Analytic = () => {
       .then((res) => res.json())
       .then((data) => setOrderMonth(data))
       .catch((err) => console.log(err));
+
+    fetch(`${url}/storage/analytics/order_total_price/`)
+      .then((res) => res.json())
+      .then((data) => setPrice(data))
+      .catch((err) => console.log(err));
   }, [url, token]);
 
   return (
-    <div>
+    <div style={{ height: "100%" }}>
       {token ? (
         <div className="analytic">
           <Navbar props={"Аналитика"} />
@@ -124,8 +130,9 @@ const Analytic = () => {
                       />
                     </div>
                     <div className="text">
+                      <h4 className="title w-30">Итоговая цена</h4>
                       <h4 className="title w-30">
-                        {monthClient?.message || 0}
+                        {price?.total_price || 0} рубль
                       </h4>
                     </div>
                   </div>

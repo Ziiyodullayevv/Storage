@@ -18,7 +18,7 @@ const Navbar = ({ props }: Props) => {
       <div className="navbarRight">
         <CiLogout />
         <Link className="logOut" onClick={handleDeleteToken} to={"/signin"}>
-          Logout
+          Выход
         </Link>
       </div>
     </div>

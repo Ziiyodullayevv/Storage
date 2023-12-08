@@ -119,9 +119,9 @@ const Task = () => {
     };
 
     Modal.confirm({
-      title: "Вы уверены, что хотите открыть эту информацию?",
-      okText: "Хорошо",
-      cancelText: "Отмена",
+      title: "Вы уверены, что хотите удалить эту информацию?",
+      okText: "Да",
+      cancelText: "Нет",
       okType: "danger",
       onOk: async () => {
         await fetch(`${url}/task/list/${id}/`, {

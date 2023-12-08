@@ -73,7 +73,16 @@ const Orders = () => {
       ),
     },
 
-    { key: "price", title: "Цена", dataIndex: "price" },
+    {
+      key: "price",
+      title: "Цена",
+      dataIndex: "price",
+      render: (price: string) => (
+        <span>
+          <span>{price}</span> <span style={{ fontWeight: "500" }}>рубль</span>
+        </span>
+      ),
+    },
     { key: "deadline", title: "Крайний срок", dataIndex: "deadline" },
     {
       key: "6",
@@ -92,6 +101,21 @@ const Orders = () => {
       ),
     },
   ];
+
+  // const [messageApi, contextHolder] = message.useMessage();
+  // const success = () => {
+  //   messageApi.open({
+  //     type: "success",
+  //     content: "Данные успешно добавлены!",
+  //   });
+  // };
+
+  // const error = () => {
+  //   messageApi.open({
+  //     type: "error",
+  //     content: `Данные уже существуют или поле не заполнено`,
+  //   });
+  // };
 
   //handleDelete:
   const handleDeleteClient = async (id: number) => {
@@ -148,8 +172,9 @@ const Orders = () => {
     };
 
     Modal.confirm({
-      title: "Rostdan ham ushbu malumotni ochirmoqchimisiz",
-      okText: "Yes",
+      title: "Вы уверены, что хотите удалить эту информацию?",
+      okText: "Да",
+      cancelText: "Нет",
       okType: "danger",
       onOk: onOk,
     });
@@ -196,7 +221,6 @@ const Orders = () => {
             is_notificated: true,
             client: isEditingClient?.client,
             device: isEditingClient?.device,
-            storage: [],
           }),
         }
       );
@@ -234,6 +258,7 @@ const Orders = () => {
     <>
       {token ? (
         <div className="storage">
+          {/* {contextHolder} */}
           <div>
             <Navbar props={clients} />
             <div className="storagePage">
@@ -292,6 +317,7 @@ const Orders = () => {
                   Крайний срок:
                 </Typography>
                 <Input
+                  type="date"
                   style={{ marginTop: "10px", padding: "10px" }}
                   value={isEditingClient?.deadline}
                   onChange={(e) => {

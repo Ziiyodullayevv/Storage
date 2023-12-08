@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <Typography sx={{ color: "gray" }} variant="body2">
-        RemOnline © 2012-2023 | support@remonline.app English
+        Складская система © 2023 | ninjadevs@gmail.com
       </Typography>
     </footer>
   );

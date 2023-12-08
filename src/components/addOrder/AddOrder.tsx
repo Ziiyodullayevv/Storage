@@ -26,7 +26,7 @@ type Props = {
 };
 
 const AddOrder = (props: Props) => {
-  const url = import.meta.env.VITE_API_URL;
+  const url = import.meta.env.VITE_KEY;
   const token = localStorage.getItem("token");
   const [, setOrderList] = useContext(OrderContext);
   const [client] = useContext(AccountContext);
@@ -34,8 +34,6 @@ const AddOrder = (props: Props) => {
   const [storage, setStorage] = useContext(StorageContext);
 
   const data = storage.filter((item: any) => !item?.is_booked);
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     const enableScroll = () => {
@@ -74,7 +72,7 @@ const AddOrder = (props: Props) => {
 
   const [userData, setUserData] = useState<UserData>({
     client: client && client.length > 0 ? client[0]?.id || 0 : 0,
-    device: 0,
+    device: device && device.length > 0 ? device[0]?.id || 0 : 0,
     storage: [],
     deadline: "",
     problem_description: "",
@@ -100,9 +98,11 @@ const AddOrder = (props: Props) => {
       refreshData();
       refreshOrder();
       resetForm();
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
     } catch (error) {
       console.error("Error creating order:", error);
-      // Provide user feedback, e.g., show a notification
     }
   };
 
@@ -142,7 +142,7 @@ const AddOrder = (props: Props) => {
   const resetForm = () => {
     setUserData({
       client: client && client.length > 0 ? client[0]?.id || 0 : 0,
-      device: 0,
+      device: device && device.length > 0 ? device[0]?.id || 0 : 0,
       storage: [],
       deadline: "",
       problem_description: "",
@@ -162,24 +162,28 @@ const AddOrder = (props: Props) => {
         </IconButton>
         <div className="modalList">
           <Typography sx={{ marginBottom: "20px" }} variant="h4">
-            Create New {props.slug}
+            Новый заказ на создание
           </Typography>
 
           <Stack sx={{ width: "100%" }} spacing={2}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label-1">Client</InputLabel>
+              <InputLabel id="demo-simple-select-label-1">Клиент</InputLabel>
               <Select
                 labelId="demo-simple-select-label-1"
                 id="demo-simple-select-1"
                 inputRef={clientRef}
                 value={userData?.client}
-                label="Client"
+                label="Клиент"
                 onChange={handleChange}
+                placeholder="Matn kititing"
                 name="client"
-                // defaultValue={"tesni 1"}
               >
                 {client?.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
+                  <MenuItem
+                    sx={{ textTransform: "capitalize" }}
+                    key={item.id}
+                    value={item.id}
+                  >
                     {item.username}
                   </MenuItem>
                 ))}
@@ -187,18 +191,25 @@ const AddOrder = (props: Props) => {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label-2">Device</InputLabel>
+              <InputLabel id="demo-simple-select-label-2">
+                Устройство
+              </InputLabel>
               <Select
+                placeholder="Устройство"
                 labelId="demo-simple-select-label-2"
                 id="demo-simple-select-2"
-                label="Employee"
+                label="Устройство"
                 value={userData.device}
                 inputRef={deviceRef}
                 onChange={handleChange}
                 name="device"
               >
                 {device?.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
+                  <MenuItem
+                    sx={{ textTransform: "capitalize" }}
+                    key={item.id}
+                    value={item.id}
+                  >
                     {item.name}
                   </MenuItem>
                 ))}
@@ -232,8 +243,8 @@ const AddOrder = (props: Props) => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Fixed tag"
-                  placeholder="Favorites"
+                  label="Запасной"
+                  placeholder="Запасной"
                 />
               )}
             />
@@ -249,7 +260,7 @@ const AddOrder = (props: Props) => {
             />
 
             <TextField
-              label={"Problem Description"}
+              label={"Oписание проблемы"}
               sx={{ width: "100%" }}
               variant="outlined"
               inputRef={problemDescriptionRef}
@@ -259,7 +270,7 @@ const AddOrder = (props: Props) => {
             />
 
             <TextField
-              label="Price"
+              label="Цена"
               sx={{ width: "100%" }}
               type="number"
               variant="outlined"
@@ -282,7 +293,7 @@ const AddOrder = (props: Props) => {
               size="large"
               variant="contained"
             >
-              Submit
+              Oтправлять
             </Button>
           </Stack>
         </div>

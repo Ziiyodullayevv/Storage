@@ -17,8 +17,8 @@ const Products = () => {
   const products = "Продукт";
   const [open, setOpen] = useState(false);
   const [productList, setProductList] = useContext(ProductContext);
-    const [kerakszData, setkerakszData] = useState({});
-    console.log(kerakszData);
+  const [kerakszData, setkerakszData] = useState({});
+  console.log(kerakszData);
 
   useEffect(() => {
     fetch(`${url}/product/device_list_or_create/`, {
@@ -98,9 +98,9 @@ const Products = () => {
     };
 
     Modal.confirm({
-      title: "Вы уверены, что хотите открыть эту информацию?",
-      okText: "хорошо",
-      cancelText: "Отмена",
+      title: "Вы уверены, что хотите удалить эту информацию?",
+      okText: "Да",
+      cancelText: "Нет",
       okType: "danger",
       onOk: async () => {
         await fetch(`${url}/product/device/delete/${id}/`, {

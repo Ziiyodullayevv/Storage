@@ -27,17 +27,9 @@ interface UserData {
   password2: string;
   role: number;
 }
-const  UserDataCheck = {
-  username:["string"],
-  phone_number:["string"],
-  full_name:["string"],
-  email:["string"],
-  password:["string"],
-  password2:["string"],
-  role: [0],
-}
 
 const SignUp: React.FC = () => {
+  const url = import.meta.env.VITE_KEY;
   const [messageApi, contextHolder] = message.useMessage();
   const success = () => {
     messageApi.open({
@@ -49,12 +41,12 @@ const SignUp: React.FC = () => {
   const error = () => {
     messageApi.open({
       type: "error",
-      content: "This is an error message",
+      content: "",
     });
   };
 
   // data:
-  const [data, setData] = useState(UserDataCheck);
+  const [data, setData] = useState<any>(null);
   // Password icon:
   const navigate = useNavigate();
   const [showPassword1, setShowPassword1] = useState(false);
@@ -88,9 +80,7 @@ const SignUp: React.FC = () => {
   });
 
   // handleChange:
-  const handleChange = (
-    event:any
-  ) => {
+  const handleChange = (event: any) => {
     event.preventDefault();
     const { name, value } = event.target;
     setUserData((prevData) => ({
@@ -101,9 +91,7 @@ const SignUp: React.FC = () => {
 
   // handleSubmit:
   const handleSubmit = () => {
-    console.log("data", userData);
-
-    fetch("http://127.0.0.1:8000/account/register/", {
+    fetch(`${url}/account/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -113,8 +101,7 @@ const SignUp: React.FC = () => {
       .then((res) => res.json())
       .then((res) => {
         setData(res);
-        console.log(res ,"ressssssssssssssssssss");
-        
+
         if (res?.success) {
           success();
           localStorage.setItem("token", res?.data?.tokens?.access);
@@ -135,7 +122,7 @@ const SignUp: React.FC = () => {
       <form>
         <Stack spacing={2}>
           <Typography sx={{ textAlign: "center" }} variant="h4">
-            Join Ninja Devs!
+            Присоединяйтесь к складу!
           </Typography>
           <TextField
             required
@@ -263,14 +250,14 @@ const SignUp: React.FC = () => {
             size="large"
             variant="contained"
           >
-            Sign Up
+            Зарегистрироваться
           </Button>
           <div className="toSignUp">
             <Typography sx={{ color: "gray" }} variant="body1">
-              Don't have an account?
+              У вас нет учетной записи?
             </Typography>
             <Link style={{ color: "#2F89E3" }} to={"/signin"}>
-              Sign In
+              Войти
             </Link>
           </div>
         </Stack>

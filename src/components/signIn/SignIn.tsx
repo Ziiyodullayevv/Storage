@@ -12,8 +12,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { useRef, useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
+import { message } from "antd";
 
-const SignIn: React.FC = () => {
+const SignIn = () => {
   interface UserData {
     username: string;
     password: string;
@@ -38,12 +39,27 @@ const SignIn: React.FC = () => {
     password: "",
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "This is a success message",
+    });
+  };
+
+  const error = () => {
+    messageApi.open({
+      type: "error",
+      content: "пароль или имя пользователя введены неверно!",
+    });
   };
 
   // login:
@@ -57,22 +73,23 @@ const SignIn: React.FC = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         if (res?.success) {
           localStorage.setItem("token", res?.data?.tokens?.access);
+          success();
           navigate("/");
         } else {
-          alert("Login yoki parol xato!");
+          error();
         }
       });
   };
 
   return (
     <div className="signIn">
+      {contextHolder}
       <form>
         <Stack spacing={2}>
           <Typography sx={{ textAlign: "center" }} variant="h4">
-            Sign in to account
+            Войдите в аккаунт
           </Typography>
           <TextField
             size="medium"
@@ -123,14 +140,14 @@ const SignIn: React.FC = () => {
             }}
             variant="contained"
           >
-            Sign In
+            Войти
           </Button>
           <div className="toSignUp">
             <Typography sx={{ color: "gray" }} variant="body1">
-              Don't have an account?
+              У вас нет учетной записи?
             </Typography>
             <Link style={{ color: "#2F89E3" }} to={"/signup"}>
-              Sign Up
+              Зарегистрироваться
             </Link>
           </div>
         </Stack>
