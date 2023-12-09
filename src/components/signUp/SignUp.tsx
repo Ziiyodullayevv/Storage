@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
   const error = () => {
     messageApi.open({
       type: "error",
-      content: "",
+      content: "Неудачная попытка!  ",
     });
   };
 

@@ -18,7 +18,7 @@ import Slider from "../components/slider/Slider";
 
 // router:
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import { RouterProvider } from "react-router";
+import { RouterProvider, useNavigate } from "react-router";
 
 // login-pages:
 const SignIn = React.lazy(() => import("../components/signIn/SignIn"));
@@ -28,6 +28,15 @@ const SignUp = React.lazy(() => import("../components/signUp/SignUp"));
 import NotFound from "../components/404/NotFound";
 
 const Layout = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  React.useEffect(() => {
+    if (!token) {
+      navigate("/signin");
+    }
+  }, [token, navigate]);
+
   return (
     <React.Fragment>
       <div className="main">
@@ -35,9 +44,7 @@ const Layout = () => {
           <div className="menuContainer">
             <Menu />
           </div>
-          <div className="contentContainer">
-            <Outlet />
-          </div>
+          <div className="contentContainer">{token ? <Outlet /> : null}</div>
         </div>
       </div>
     </React.Fragment>
