@@ -12,7 +12,7 @@ const Storages = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_KEY;
-  const storage = "Хранилище";
+  const storage = "Запчасть";
   const [open, setOpen] = useState(false);
   const [storageList, setStorageList] = useContext(StorageContext);
   const [kerakszData, setkerakszData] = useState({});
@@ -91,15 +91,13 @@ const Storages = () => {
 
     {
       key: "4",
-      title: "Запасной",
+      title: "Запчасть",
       dataIndex: "spare",
       render: (name: string) => (
         <span style={{ textTransform: "capitalize" }}>{name}</span>
       ),
     },
   ];
-
-  console.log("storageList", storageList);
 
   return (
     <div className="storage">

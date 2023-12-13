@@ -56,7 +56,7 @@ const Spare = () => {
     },
     {
       key: "3",
-      title: "Первая цена",
+      title: "Куплено",
       dataIndex: "first_price",
       render: (firstPrice: string) => {
         return (
@@ -69,7 +69,7 @@ const Spare = () => {
 
     {
       key: "4",
-      title: "Последняя цена",
+      title: "Продано",
       dataIndex: "last_price",
       render: (lastPrice: string) => {
         return (
@@ -82,7 +82,7 @@ const Spare = () => {
 
     {
       key: "5",
-      title: "Создать данные",
+      title: "Время",
       dataIndex: "created_date",
       render: (createdDate: string) => {
         return (
@@ -161,7 +161,7 @@ const Spare = () => {
             }}
             variant="contained"
           >
-            Новая запас
+            Новая запчасти
           </Button>
           <AddSpare setOpen={setOpen} open={open} slug={spare} />
           <AntdTable columns={columns} dataSource={spareList} />

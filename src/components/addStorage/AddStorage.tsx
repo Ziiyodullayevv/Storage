@@ -145,7 +145,7 @@ const AddStorage = (props: Props) => {
             sx={{ textTransform: "capitalize", marginBottom: "20px" }}
             variant="h4"
           >
-            Создать новое хранилище
+            Создать новое Запчасть
           </Typography>
 
           <Stack sx={{ width: "100%" }} spacing={2}>
