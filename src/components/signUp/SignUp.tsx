@@ -135,8 +135,8 @@ const SignUp: React.FC = () => {
             onChange={handleChange}
             inputRef={usernameRef}
             name="username"
-            error={data?.username[0] ? true : false}
-            helperText={data?.username[0]}
+            error={data?.username?.[0] ? true : false}
+            helperText={data?.username?.[0]}
           />
 
           <TextField
@@ -150,8 +150,8 @@ const SignUp: React.FC = () => {
             onChange={handleChange}
             inputRef={fullNameRef}
             name="full_name"
-            error={data?.full_name[0] ? true : false}
-            helperText={data?.full_name[0]}
+            error={data?.full_name?.[0] ? true : false}
+            helperText={data?.full_name?.[0]}
           />
           <TextField
             sx={{ width: "100%" }}
@@ -185,8 +185,8 @@ const SignUp: React.FC = () => {
             value={userData.password}
             onChange={handleChange}
             inputRef={passwordRef}
-            error={data?.password[0] ? true : false}
-            helperText={data?.password[0]}
+            error={data?.password?.[0] ? true : false}
+            helperText={data?.password?.[0]}
             name="password"
             InputProps={{
               endAdornment: (
@@ -213,8 +213,8 @@ const SignUp: React.FC = () => {
             onChange={handleChange}
             inputRef={password2Ref}
             name="password2"
-            error={data?.password[0] ? true : false}
-            helperText={data?.password[0]}
+            error={data?.password2?.[0] ? true : false}
+            helperText={data?.password2?.[0]}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">

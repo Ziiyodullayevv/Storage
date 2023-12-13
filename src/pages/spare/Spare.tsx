@@ -14,7 +14,7 @@ const Spare = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_KEY;
-  const spare = "Запасной";
+  const spare = "Запчасти";
   const [open, setOpen] = useState(false);
   const [spareList, setSpareList] = useContext(SparesContext);
   const [kerakszData, setkerakszData] = useState({});

@@ -11,18 +11,23 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 0.7vw;
+  height: 0.7vh;
+  background: white;
 }
 
 ::-webkit-scrollbar-track {
-  padding: 5px;
+  margin-block: 0.2vh;
 }
 
 ::-webkit-scrollbar-thumb {
-  width: 2px;
-  background-color: rgb(135, 135, 135);
-  padding: 10px;
-  height: 100px;
-  margin: 5px;
-  border-radius: 5px;
+  background: #dadce0;
+  border: 3px solid white;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  transition: all 2s ease;
+  background: #b6b7ba;
+  cursor: pointer;
 }

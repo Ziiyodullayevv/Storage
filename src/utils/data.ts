@@ -1,4 +1,3 @@
-// import home from "../assets/home.svg";
 
 // react-icons:
 import { AiOutlineFund } from "react-icons/ai";

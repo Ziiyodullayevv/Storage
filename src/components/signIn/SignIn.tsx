@@ -75,8 +75,8 @@ const SignIn = () => {
       .then((res) => {
         if (res?.success) {
           localStorage.setItem("token", res?.data?.tokens?.access);
-          success();
           navigate("/");
+          window.location.reload();
         } else {
           error();
         }
